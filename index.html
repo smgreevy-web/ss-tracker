@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0f0f0f">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="icons/icon-192x192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192x192.png">
+<link rel="apple-touch-icon" href="icons/icon-192x192.png">
+<title>S&S Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f0f0f;--card:#181818;--bdr:#252525;--bdr2:#3a3a3a;--tx:#e5e7eb;--dm:#888;--mt:#555;--grn:#22c55e;--gbg:#052e16;--yel:#eab308;--org:#f97316;--red:#ef4444;--gry:#6b7280;--blu:#3b82f6;--pur:#8b5cf6;--acc:#dc2626}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Mono',monospace;background:var(--bg);color:var(--tx);min-height:100vh;min-height:100dvh;max-width:440px;margin:0 auto;padding:12px;overflow-x:hidden}
+.hd{display:flex;align-items:center;gap:12px;padding:8px 0 12px}
+.logo{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,#dc2626,#7f1d1d);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;font-weight:900;font-size:15px;color:#fff;flex-shrink:0;letter-spacing:-1px}
+.hd h1{font-family:'Outfit',sans-serif;font-size:17px;font-weight:800;color:#f9fafb;letter-spacing:-.5px}
+.hd .sb{font-size:10px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase;margin-top:1px}
+.nv{display:flex;gap:3px;background:var(--card);border-radius:10px;padding:3px;margin-bottom:12px;position:sticky;top:0;z-index:10}
+.nv button{flex:1;padding:9px 0;background:0 0;border:none;color:var(--mt);font-size:11px;font-weight:600;border-radius:8px;cursor:pointer;font-family:inherit;transition:all .15s}
+.nv button.on{background:#222;color:#f9fafb}
+.cd{background:var(--card);border-radius:14px;padding:16px;margin-bottom:10px;border:1px solid var(--bdr)}
+.cd h2{font-family:'Outfit',sans-serif;font-size:15px;font-weight:700;color:#f9fafb;margin-bottom:2px}
+.cd .hn{font-size:11px;color:var(--mt);margin-bottom:14px}
+.dg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dy{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 4px 10px;border-radius:12px;border:2px solid var(--bdr);cursor:pointer;transition:all .15s;background:transparent;font-family:inherit;color:var(--mt);min-height:78px;position:relative}
+.dy .ico{font-size:22px;margin-bottom:3px;line-height:1}
+.dy .code{font-family:'Outfit',sans-serif;font-size:14px;font-weight:800;color:#aaa}
+.dy .lbl{font-size:9px;color:var(--mt);margin-top:1px}
+.dy.sel{border-color:var(--blu);background:rgba(59,130,246,.08)}.dy.sel .code{color:#fff}
+.dy.rsel{border-color:var(--grn);background:rgba(34,197,94,.06)}.dy.rsel .code{color:var(--grn)}
+.dy.nsel{border-color:#a78bfa;background:rgba(167,139,250,.08)}.dy.nsel .code{color:#a78bfa}
+.dy .wo{position:absolute;top:3px;right:5px;font-size:9px}
+.fl{margin-bottom:14px}
+.fl label{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#ccc;margin-bottom:5px}
+.fl .th{font-size:10px;color:var(--mt);font-weight:400}
+.dt{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:4px;background:#333;vertical-align:middle}
+.dt.g{background:var(--grn)}.dt.r{background:var(--red)}
+input[type=number],textarea{width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bdr);border-radius:8px;color:#f9fafb;font-size:15px;font-family:inherit;outline:0}
+input:focus,textarea:focus{border-color:var(--bdr2)}
+textarea{min-height:56px;resize:vertical}
+.cr{display:flex;gap:6px;flex-wrap:wrap}
+.cc{display:flex;flex-direction:column;gap:6px}
+.ch{padding:9px 12px;background:0 0;border:1.5px solid var(--bdr);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .12s;color:var(--mt);flex:1;text-align:center;min-width:0}
+.ch.s{color:#fff;background:rgba(255,255,255,.04)}
+.bp{width:100%;padding:13px 0;border:none;border-radius:10px;background:linear-gradient(135deg,#dc2626,#991b1b);color:#fff;font-size:14px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;letter-spacing:.3px;transition:opacity .15s}
+.bp:disabled{opacity:.3;pointer-events:none}
+.bs{padding:12px 0;background:0 0;border:1.5px solid var(--bdr);border-radius:10px;color:#ccc;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;flex:1}
+.brow{display:flex;gap:8px}
+.tb{display:inline-block;padding:8px 24px;border-radius:8px;font-family:'Outfit',sans-serif;font-size:22px;font-weight:900;letter-spacing:2px;border:2px solid}
+.lgr{display:flex;gap:10px;margin-bottom:14px}
+.lbx{flex:1;background:var(--bg);border-radius:10px;padding:14px;text-align:center}
+.lbx .l{font-size:10px;color:var(--mt);letter-spacing:1.5px;text-transform:uppercase}
+.lbx .v{font-family:'Outfit',sans-serif;font-size:28px;font-weight:900;margin-top:4px}
+.lbx .u{font-size:10px;color:var(--mt);margin-top:2px}
+.wb{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:8px;padding:12px;margin-bottom:14px}
+.wb .tg{font-size:10px;color:var(--pur);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.wb p{font-size:12px;color:#c4b5fd;line-height:1.5}
+.sg{display:flex;flex-wrap:wrap;gap:8px;font-size:11px;color:var(--dm);margin-bottom:14px}
+.hr{background:var(--card);border-radius:10px;padding:10px 12px;margin-bottom:6px;border-left:3px solid}
+.stb{padding:2px 8px;border-radius:4px;font-size:10px;font-weight:700;display:inline-block;border:1px solid}
+.ib{border-radius:8px;padding:14px;margin-top:16px}
+.ib .tg{font-size:10px;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.ft{text-align:center;font-size:10px;color:#333;padding:16px 0 8px;letter-spacing:.5px}
+.X{display:none!important}
+.note{font-size:11px;padding:8px 12px;border-radius:8px;margin-bottom:14px;line-height:1.5}
+.note-warn{color:var(--org);background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.12)}
+.note-info{color:var(--blu);background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.12)}
+.note-good{color:var(--grn);background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.12)}
+.gcal-btn{width:100%;padding:11px 0;border:1.5px solid #1a73e8;border-radius:10px;background:rgba(26,115,232,.08);color:#8ab4f8;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px;transition:all .15s}
+.gcal-btn:hover{background:rgba(26,115,232,.15)}
+.gcal-status{font-size:11px;color:var(--grn);margin-top:6px;text-align:center}
+</style>
+</head>
+<body>
+<div class="hd"><div class="logo">S&S</div><div><h1>Simple & Sinister</h1><div class="sb">Adaptive Load Tracker</div></div></div>
+<div class="nv" id="nv">
+<button class="on" data-v="check">Readiness</button>
+<button data-v="log">Log</button>
+<button data-v="history">History</button>
+<button data-v="profile">Profile</button>
+</div>
+
+<!-- ═══ READINESS ═══ -->
+<div id="v-check">
+<div id="cf">
+<div class="cd">
+  <h2>What day are you on?</h2>
+  <p class="hn">R1 = write-off after nights · R3–R4 = freshest</p>
+  <div class="dg" id="dg1"></div>
+  <div style="height:8px"></div>
+  <div class="dg" id="dg2"></div>
+  <div id="day-note" class="X note" style="margin-top:12px"></div>
+</div>
+<div class="cd">
+  <h2>Readiness Signals</h2>
+  <p class="hn">OxiPro pulse ox + sleep + subjective feel</p>
+  <div class="fl">
+    <label>Resting Heart Rate <span class="th">[≤<span id="td">62</span>bpm = green]</span><span id="d1" class="dt"></span></label>
+    <input type="number" inputmode="numeric" id="i-rhr" placeholder="bpm from OxiPro">
+  </div>
+  <div class="fl">
+    <label>Hours Slept <span class="th">[≥7h = green]</span><span id="d2" class="dt"></span></label>
+    <input type="number" inputmode="decimal" step="0.5" id="i-slp" placeholder="hours slept last night">
+  </div>
+  <div class="fl">
+    <label>Grip / Feel <span class="th">[strong = green]</span><span id="d3" class="dt"></span></label>
+    <div class="cr" id="grip-row"></div>
+  </div>
+</div>
+<div class="cd">
+  <h2>Work Stress</h2>
+  <p class="hn">Tap any that apply today</p>
+  <div class="cc" id="extras-list"></div>
+  <div id="court-q" class="X" style="margin-top:12px">
+    <div class="fl">
+      <label style="color:var(--org)">Court on which rest day? <span class="th">(R1–R2 tired / R3–R4 fresh)</span></label>
+      <div class="cr" id="court-chips"></div>
+    </div>
+  </div>
+</div>
+<button class="bp" id="btn-calc" disabled>What Should I Lift?</button>
+</div>
+<div id="result" class="cd X"></div>
+</div>
+
+<!-- ═══ LOG ═══ -->
+<div id="v-log" class="X">
+<div id="lf" class="cd"><h2>Log Session</h2><div id="lt" style="margin:6px 0 10px"></div>
+<div class="fl"><label>Swings Done</label><input type="number" inputmode="numeric" id="i-sw" placeholder="100"></div>
+<div class="fl"><label>TGU Done</label><input type="number" inputmode="numeric" id="i-tg" placeholder="10"></div>
+<div class="fl"><label>Notes</label><textarea id="i-nt" placeholder="How'd it feel?"></textarea></div>
+<button class="bp" id="btn-save">Save Session</button>
+<button class="gcal-btn" id="btn-gcal" style="display:none;width:100%;padding:11px 0;border:1.5px solid #4285f4;border-radius:10px;background:rgba(66,133,244,.08);color:#93bbfc;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px" onclick="addToGCal()">📅 Add to Google Calendar</button>
+<div id="gcal-msg" style="text-align:center;font-size:11px;margin-top:4px"></div>
+<button class="gcal-btn" id="btn-gcal" onclick="addToCalendar()">📅 Add to Google Calendar</button>
+<div id="gcal-status"></div>
+</div>
+<div id="ld" class="cd X" style="text-align:center"><div style="font-size:36px;margin-bottom:6px">✓</div><h2 style="color:var(--grn)">Session Logged</h2><div id="gcal-done-status" style="font-size:11px;color:var(--dm);margin-top:6px"></div><button class="bs" style="margin-top:12px;width:100%" onclick="sw('history')">View History</button>
+<button style="width:100%;padding:11px 0;border:1.5px solid #4285f4;border-radius:10px;background:rgba(66,133,244,.08);color:#93bbfc;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:8px" onclick="addToGCal()">📅 Add to Google Calendar</button>
+<div id="gcal-msg2" style="text-align:center;font-size:11px;margin-top:4px"></div>
+</div>
+</div>
+
+<!-- ═══ HISTORY ═══ -->
+<div id="v-history" class="X">
+<div class="cd"><h2>Training Log</h2><p class="hn" id="hc">0 sessions</p></div>
+<div id="hl"></div>
+<button class="bs X" id="btn-clr" style="margin-top:10px;color:var(--red);border-color:#7f1d1d;font-size:11px;width:100%">Clear All Data</button>
+</div>
+
+<!-- ═══ PROFILE ═══ -->
+<div id="v-profile" class="X">
+<div class="cd"><h2>Profile</h2>
+<div class="fl" style="margin-top:14px"><label>Weight (kg)</label><input type="number" inputmode="decimal" id="p-w" placeholder="e.g. 88"></div>
+<div class="fl"><label>Height (cm)</label><input type="number" inputmode="numeric" id="p-h" placeholder="e.g. 180"></div>
+<div class="fl"><label>RHR Green Threshold (bpm)</label><input type="number" inputmode="numeric" id="p-t" placeholder="62"></div>
+<div id="bmi-box" class="ib X" style="background:var(--bg)"><div class="tg" style="color:var(--mt)">BMI</div><div id="bmi-v" style="font-family:'Outfit',sans-serif;font-size:24px;font-weight:900;color:var(--tx);margin-top:4px"></div><div id="bmi-d" style="font-size:11px;color:var(--dm);margin-top:2px"></div></div>
+<div class="ib" style="background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.12)"><div class="tg" style="color:var(--pur)">Your Rack</div><div style="font-size:13px;color:#c4b5fd">16 · 24 · 32 · 40 · 44 · 48 kg</div></div>
+<div class="ib" style="background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.12)">
+<div class="tg" style="color:#4285f4">Google Calendar</div>
+<div style="font-size:12px;color:#93bbfc;line-height:1.5">After logging a session, tap "Add to Google Calendar" to create an event with your training details.</div>
+</div>
+<div class="ib" style="background:rgba(34,197,94,.05);border:1px solid rgba(34,197,94,.12)"><div class="tg" style="color:var(--grn)">Shift Cycle</div><div style="font-size:12px;color:#86efac;line-height:1.8">R1 (write-off) → R2 → R3 → R4 → E1 → E2 → N1 → N2</div><div style="font-size:11px;color:var(--mt);margin-top:4px">Best: E2 (optimal) · R3–R4 (freshest) · Nights possible if signals green</div></div>
+</div>
+</div>
+
+<div class="ft">S&S Adaptive · R×4 E×2 N×2</div>
+
+<script>
+// ═══ REGISTER SERVICE WORKER ═══
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+
+// ═══ DATA ═══
+const DAYS=[
+  {id:"R1",code:"R1",label:"Rest",icon:"🛏️",cat:"rest",fresh:false,wo:true},
+  {id:"R2",code:"R2",label:"Rest",icon:"🛏️",cat:"rest",fresh:false,wo:false},
+  {id:"R3",code:"R3",label:"Rest",icon:"🏠",cat:"rest",fresh:true,wo:false},
+  {id:"R4",code:"R4",label:"Rest",icon:"🏠",cat:"rest",fresh:true,wo:false},
+  {id:"E1",code:"E1",label:"Early",icon:"🌅",cat:"early",fresh:null,wo:false},
+  {id:"E2",code:"E2",label:"Early",icon:"🌅",cat:"early",fresh:null,wo:false},
+  {id:"N1",code:"N1",label:"Night",icon:"🌙",cat:"night",fresh:null,wo:false},
+  {id:"N2",code:"N2",label:"Night",icon:"🌙",cat:"night",fresh:null,wo:false},
+];
+const ALL_EXTRAS=[
+  {id:"overtime",label:"Did overtime today",forCats:["rest","early","night"]},
+  {id:"court_night",label:"Court this morning (after night shift)",forCats:["early"]},
+  {id:"court_rest",label:"Court on a rest day",forCats:["rest"]},
+];
+const COURT_DAYS=[
+  {id:"R1",label:"R1 (write-off)",fresh:false},
+  {id:"R2",label:"R2 (tired)",fresh:false},
+  {id:"R3",label:"R3 (fresh)",fresh:true},
+  {id:"R4",label:"R4 (fresh)",fresh:true},
+];
+const TIERS={
+  FULL:{label:"FULL SEND",color:"#22c55e",bg:"#052e16",sw:"48kg",tg:"44kg",sets:"10×10 one-arm swings + 5×(1+1) TGU",w:"All 3 green, body primed. Power every rep — this is kime. Float the bell at the top. Breathe into the groin on every swing. \"Each rep an all-out effort.\" Sinister standard."},
+  MOD_H:{label:"MODERATE",color:"#eab308",bg:"#422006",sw:"44kg",tg:"40kg",sets:"10×10 one-arm swings + 5×(1+1) TGU",w:"Solid day. Punch the clock — technique and power, no pacing. \"Maximum contracture against submaximal resistance.\" Focus on the hike, snap the hips."},
+  MOD_L:{label:"MODERATE−",color:"#f97316",bg:"#431407",sw:"40kg",tg:"32kg",sets:"10×10 one-arm swings + 5×(1+1) TGU",w:"Reduced load, full intent. Breath timing: 10 swings, 5 breaths. \"Think of S&S not as a workout but as a recharge.\" 100 reps hit the spot."},
+  LIGHT:{label:"LIGHT",color:"#ef4444",bg:"#450a0a",sw:"32kg",tg:"—",sets:"10×10 one-arm swings only",w:"Recharge session. 100 crisp swings, walk away. \"Punch the clock, always mentally ready to flip the crazy switch.\" Save the spirit for when it counts."},
+  REST:{label:"REST",color:"#6b7280",bg:"#1f2937",sw:"—",tg:"—",sets:"No training",w:"\"The purpose of a session is to store energy, not exhaust it.\" Today you recover. Straw breathing or a walk — nothing more."}
+};
+
+let S={day:null,rhr:null,slp:null,grip:null,ex:[],courtDay:null,res:null};
+let ss=JSON.parse(localStorage.getItem("ss5_s")||"[]");
+let pf=JSON.parse(localStorage.getItem("ss5_p")||'{"w":"","h":"","t":"62"}');
+
+// ═══ DAYS ═══
+function buildDays(){DAYS.forEach(d=>{const b=document.createElement("button");b.className="dy";b.id="dy-"+d.id;b.innerHTML=`${d.wo?'<span class="wo">💤</span>':''}<div class="ico">${d.icon}</div><div class="code">${d.code}</div><div class="lbl">${d.label}</div>`;b.onclick=()=>pickDay(d.id);(d.cat==="rest"?document.getElementById("dg1"):document.getElementById("dg2")).appendChild(b)})}
+
+function pickDay(id){
+  S.day=id;S.ex=[];S.courtDay=null;
+  document.querySelectorAll(".dy").forEach(b=>b.classList.remove("sel","rsel","nsel"));
+  const btn=document.getElementById("dy-"+id),d=DAYS.find(x=>x.id===id);
+  btn.classList.add(d.cat==="night"?"nsel":d.cat==="rest"?"rsel":"sel");
+  const dn=document.getElementById("day-note");
+  if(d.wo){dn.className="note note-warn";dn.textContent="⚠️ R1 write-off — wrecked after back-to-back nights. Auto REST.";dn.classList.remove("X")}
+  else if(d.cat==="night"){dn.className="note note-info";dn.textContent="🌙 Night shift — heavy penalty but you can still fit something in if signals are green.";dn.classList.remove("X")}
+  else if(d.id==="E2"){dn.className="note note-good";dn.textContent="🌅 E2 — optimal training window. Post-rest, fresh legs.";dn.classList.remove("X")}
+  else if(d.id==="R2"){dn.className="note note-warn";dn.textContent="🛏️ R2 — still recovering from nights. Reduced capacity.";dn.classList.remove("X")}
+  else if(d.fresh){dn.className="note note-good";dn.textContent="🏠 "+d.code+" — good rest day, should be fresh.";dn.classList.remove("X")}
+  else if(d.id==="E1"){dn.className="note note-info";dn.textContent="🌅 E1 — back on tour after rest days.";dn.classList.remove("X")}
+  else dn.classList.add("X");
+  if(d.wo){autoRest(d);return}
+  buildExtras(d);updExtras();vld();
+}
+
+function autoRest(d){
+  const t=TIERS.REST;S.res={tk:"REST",t};
+  document.getElementById("cf").classList.add("X");
+  const el=document.getElementById("result");el.classList.remove("X");el.style.borderColor=t.color;el.style.borderWidth="2px";
+  el.innerHTML=`<div style="text-align:center;margin-bottom:14px"><div class="tb" style="background:${t.bg};color:${t.color};border-color:${t.color}">${t.label}</div></div><div class="wb"><div class="tg">Protocol</div><p>R1 write-off — destroyed after back-to-back nights. No training.</p><p style="margin-top:8px">${t.w}</p></div><div class="sg"><span>${d.icon} ${d.code} ${d.label}</span></div><button class="bs" style="width:100%" onclick="doReset()">Back</button>`;
+  document.getElementById("lt").innerHTML=`<div class="stb" style="color:${t.color};background:${t.bg};border-color:${t.color}">REST — R1</div>`;
+}
+
+// ═══ EXTRAS ═══
+function buildExtras(d){
+  const el=document.getElementById("extras-list");el.innerHTML="";
+  const cat=d.cat||DAYS.find(x=>x.id===S.day)?.cat;
+  ALL_EXTRAS.filter(e=>e.forCats.includes(cat)).forEach(e=>{
+    const b=document.createElement("button");b.className="ch";b.style.textAlign="left";b.style.padding="10px 14px";b.style.flex="none";b.textContent=e.label;b.dataset.v=e.id;
+    b.onclick=()=>{if(S.ex.includes(e.id))S.ex=S.ex.filter(x=>x!==e.id);else S.ex.push(e.id);S.courtDay=null;updExtras();vld()};el.appendChild(b);
+  });
+}
+function updExtras(){
+  document.querySelectorAll("#extras-list .ch").forEach(b=>{const s=S.ex.includes(b.dataset.v);b.classList.toggle("s",s);b.style.borderColor=s?"var(--org)":"var(--bdr)";b.style.color=s?"var(--org)":"var(--mt)";const e=ALL_EXTRAS.find(x=>x.id===b.dataset.v);if(e)b.textContent=(s?"✓ ":"")+e.label});
+  const cq=document.getElementById("court-q");if(S.ex.includes("court_rest")){cq.classList.remove("X");buildCC()}else{cq.classList.add("X");S.courtDay=null}
+}
+function buildCC(){const r=document.getElementById("court-chips");r.innerHTML="";COURT_DAYS.forEach(c=>{const b=document.createElement("button");b.className="ch";b.textContent=c.label;b.dataset.v=c.id;b.onclick=()=>{S.courtDay=c.id;updCCv();vld()};r.appendChild(b)});updCCv()}
+function updCCv(){document.querySelectorAll("#court-chips .ch").forEach(b=>{const s=b.dataset.v===S.courtDay;b.classList.toggle("s",s);b.style.borderColor=s?"var(--org)":"var(--bdr)";b.style.color=s?"#fff":"var(--mt)"})}
+
+// ═══ GRIP ═══
+(function(){const r=document.getElementById("grip-row");["Poor","Ok","Strong"].forEach(g=>{const b=document.createElement("button");b.className="ch";b.textContent=g;b.dataset.v=g.toLowerCase();b.onclick=()=>{S.grip=b.dataset.v;updG();vld()};r.appendChild(b)})})();
+function updG(){document.querySelectorAll("#grip-row .ch").forEach(b=>{const g=b.dataset.v,s=g===S.grip,c=g==="strong"?"var(--grn)":g==="ok"?"var(--yel)":"var(--red)";b.classList.toggle("s",s);b.style.borderColor=s?c:"var(--bdr)";b.style.color=s?"#fff":"var(--mt)"});document.getElementById("d3").className="dt"+(S.grip==="strong"?" g":S.grip?" r":"")}
+function updD(){const th=parseInt(pf.t)||62;document.getElementById("d1").className="dt"+(S.rhr!==null?(S.rhr<=th?" g":" r"):"");document.getElementById("d2").className="dt"+(S.slp!==null?(S.slp>=7?" g":" r"):"");document.getElementById("td").textContent=th}
+function vld(){const nc=S.ex.includes("court_rest")&&!S.courtDay;document.getElementById("btn-calc").disabled=!(S.day&&S.rhr!==null&&S.slp!==null&&S.grip&&!nc)}
+
+// ═══ CALC ═══
+function calc(){
+  const th=parseInt(pf.t)||62;let g=0;
+  if(S.rhr!==null&&S.rhr<=th)g++;if(S.slp!==null&&S.slp>=7)g++;if(S.grip==="strong")g++;
+  let p=0;const d=DAYS.find(x=>x.id===S.day);
+  if(d.cat==="night")p+=1.5;
+  if(S.ex.includes("court_night"))p+=2;
+  if(S.ex.includes("overtime"))p+=1;
+  if(S.ex.includes("court_rest")&&S.courtDay){const cd=COURT_DAYS.find(r=>r.id===S.courtDay);p+=cd?.fresh?0.5:1.5}
+  if(d.cat==="rest"&&!d.fresh&&!d.wo)p+=0.5;
+  if(S.day==="E2")p-=0.5;
+  let e=g-p;
+  if(e>=2.5)return"FULL";if(e>=2)return"MOD_H";if(e>=1)return"MOD_L";if(e>=0)return"LIGHT";return"REST";
+}
+
+function showResult(){
+  const tk=calc(),t=TIERS[tk];S.res={tk,t};
+  document.getElementById("cf").classList.add("X");
+  const el=document.getElementById("result");el.classList.remove("X");el.style.borderColor=t.color;el.style.borderWidth="2px";
+  const d=DAYS.find(x=>x.id===S.day);
+  el.innerHTML=`<div style="text-align:center;margin-bottom:16px"><div class="tb" style="background:${t.bg};color:${t.color};border-color:${t.color}">${t.label}</div></div>
+  <div class="lgr"><div class="lbx"><div class="l">Swings</div><div class="v" style="color:${t.color}">${t.sw}</div><div class="u">${t.sw!=="—"?"10×10 one-arm":""}</div></div><div class="lbx"><div class="l">TGU</div><div class="v" style="color:${t.color}">${t.tg}</div><div class="u">${t.tg!=="—"?"5×(1+1)":""}</div></div></div>
+  <div style="background:var(--bg);border-radius:8px;padding:12px;margin-bottom:14px;text-align:center"><div style="font-size:13px;color:#d1d5db;font-weight:600">${t.sets}</div></div>
+  <div class="wb"><div class="tg">Pavel Says</div><p>${t.w}</p></div>
+  <div class="sg"><span>RHR ${S.rhr}bpm<span class="dt ${S.rhr<=(parseInt(pf.t)||62)?"g":"r"}"></span></span><span>Sleep ${S.slp}h<span class="dt ${S.slp>=7?"g":"r"}"></span></span><span>Grip ${S.grip}<span class="dt ${S.grip==="strong"?"g":"r"}"></span></span><span>${d.icon} ${d.code}</span>${S.ex.map(e=>`<span style="color:var(--org)">+${ALL_EXTRAS.find(x=>x.id===e)?.label}</span>`).join("")}</div>
+  <div class="brow"><button class="bs" onclick="doReset()">Recheck</button><button class="bp" style="flex:1" onclick="sw('log')">Log Session →</button></div>`;
+  document.getElementById("lt").innerHTML=`<div class="stb" style="color:${t.color};background:${t.bg};border-color:${t.color}">${t.label} — ${t.sw} / ${t.tg}</div>`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function doReset(){
+  S={day:null,rhr:null,slp:null,grip:null,ex:[],courtDay:null,res:null};
+  document.getElementById("i-rhr").value="";document.getElementById("i-slp").value="";
+  document.getElementById("cf").classList.remove("X");document.getElementById("result").classList.add("X");
+  document.getElementById("day-note").classList.add("X");document.getElementById("court-q").classList.add("X");
+  document.querySelectorAll(".dy").forEach(b=>b.classList.remove("sel","rsel","nsel"));
+  document.getElementById("extras-list").innerHTML='<div style="font-size:11px;color:var(--mt)">Select a day first</div>';
+  updG();updD();vld();
+}
+
+// ═══ LOG ═══
+function saveSession(){
+  if(!S.res)return;const t=S.res.t;
+  const e={date:new Date().toISOString().split("T")[0],day:S.day,rhr:S.rhr,slp:S.slp,grip:S.grip,ex:[...S.ex],courtDay:S.courtDay,tier:t.label,tk:S.res.tk,sw:t.sw,tg:t.tg,sc:parseInt(document.getElementById("i-sw").value)||null,tc:parseInt(document.getElementById("i-tg").value)||null,notes:document.getElementById("i-nt").value};
+  ss=[e,...ss.filter(s=>s.date!==e.date)];localStorage.setItem("ss5_s",JSON.stringify(ss));
+  document.getElementById("lf").classList.add("X");document.getElementById("ld").classList.remove("X");
+}
+
+// ═══ GOOGLE CALENDAR ═══
+function addToCalendar(){
+  if(!S.res)return;
+  const t=S.res.t;const d=DAYS.find(x=>x.id===S.day);
+  const now=new Date();
+  const title=`S&S ${t.label} — ${t.sw}${t.tg!=="—"?" / "+t.tg+" TGU":""}`;
+  const details=[
+    `Tier: ${t.label}`,
+    `Swings: ${t.sw} (${t.sw!=="—"?"10×10 one-arm":"skipped"})`,
+    `TGU: ${t.tg} (${t.tg!=="—"?"5×(1+1)":"skipped"})`,
+    ``,
+    `Signals: RHR ${S.rhr}bpm · Sleep ${S.slp}h · Grip ${S.grip}`,
+    `Shift: ${d.icon} ${d.code} ${d.label}`,
+    S.ex.length?`Extras: ${S.ex.join(", ")}`:"",
+    ``,
+    document.getElementById("i-sw").value?`Done: ${document.getElementById("i-sw").value} swings`:"",
+    document.getElementById("i-tg").value?`Done: ${document.getElementById("i-tg").value} TGU`:"",
+    document.getElementById("i-nt").value?`Notes: ${document.getElementById("i-nt").value}`:"",
+  ].filter(Boolean).join("\n");
+
+  // Format dates for Google Calendar URL
+  const pad=(n)=>String(n).padStart(2,"0");
+  const dateStr=`${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}`;
+  const startHour=pad(now.getHours());const startMin=pad(now.getMinutes());
+  const endH=now.getHours()+1;const endHour=pad(endH>23?23:endH);
+  const start=`${dateStr}T${startHour}${startMin}00`;
+  const end=`${dateStr}T${endHour}${startMin}00`;
+
+  const url=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(title)}&dates=${start}/${end}&details=${encodeURIComponent(details)}&sf=true&output=xml`;
+
+  window.open(url,"_blank");
+  document.getElementById("gcal-status").textContent="✓ Calendar opened — confirm the event there";
+  setTimeout(()=>{document.getElementById("gcal-status").textContent=""},5000);
+}
+
+// ═══ HISTORY ═══
+function renderHist(){
+  document.getElementById("hc").textContent=ss.length+" sessions";
+  const l=document.getElementById("hl");l.innerHTML="";
+  if(!ss.length){l.innerHTML='<div class="cd" style="text-align:center;color:var(--mt)">No sessions yet.</div>';document.getElementById("btn-clr").classList.add("X");return}
+  ss.slice(0,50).forEach(s=>{const t=TIERS[s.tk]||TIERS.REST;const d=DAYS.find(x=>x.id===s.day);
+  const el=document.createElement("div");el.className="hr";el.style.borderLeftColor=t.color;
+  const ds=new Date(s.date).toLocaleDateString("en-IE",{weekday:"short",day:"numeric",month:"short"});
+  el.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px;font-weight:700;color:#999">${ds}</span><span class="stb" style="color:${t.color};background:${t.bg};border-color:${t.color}">${s.tier}</span></div>
+  <div style="color:#ccc;font-size:13px;margin-top:4px">${s.sw!=="—"?s.sw+" swings":""}${s.tg&&s.tg!=="—"?" + "+s.tg+" TGU":""}</div>
+  <div style="color:var(--mt);font-size:11px;margin-top:3px">RHR ${s.rhr??"—"} · ${s.slp??"—"}h · ${s.grip??"—"}${d?" · "+d.icon+d.code:""}${s.ex?.length?" · +"+s.ex.join(", +"):""}</div>
+  ${s.sc?`<div style="color:#666;font-size:11px;margin-top:2px">Done: ${s.sc} swings${s.tc?", "+s.tc+" TGU":""}</div>`:""}
+  ${s.notes?`<div style="color:#777;font-size:11px;margin-top:2px;font-style:italic">"${s.notes}"</div>`:""}`;l.appendChild(el)});
+  document.getElementById("btn-clr").classList.remove("X");
+}
+
+// ═══ NAV ═══
+function sw(v){
+  document.querySelectorAll("[id^='v-']").forEach(e=>e.classList.add("X"));document.getElementById("v-"+v).classList.remove("X");
+  document.querySelectorAll(".nv button").forEach(b=>b.classList.toggle("on",b.dataset.v===v));
+  if(v==="history")renderHist();
+  if(v==="log"){document.getElementById("lf").classList.remove("X");document.getElementById("ld").classList.add("X");document.getElementById("i-sw").value="";document.getElementById("i-tg").value="";document.getElementById("i-nt").value="";document.getElementById("gcal-status").textContent=""}
+  if(v==="check")doReset();
+}
+
+// ═══ PROFILE ═══
+function ubmi(){const w=parseFloat(pf.w),h=parseFloat(pf.h);if(w&&h){const b=(w/Math.pow(h/100,2)).toFixed(1);document.getElementById("bmi-v").textContent=b;document.getElementById("bmi-d").textContent=pf.w+"kg · "+pf.h+"cm";document.getElementById("bmi-box").classList.remove("X")}else document.getElementById("bmi-box").classList.add("X")}
+
+// ═══ INIT ═══
+buildDays();
+document.getElementById("extras-list").innerHTML='<div style="font-size:11px;color:var(--mt)">Select a day first</div>';
+document.getElementById("p-w").value=pf.w;document.getElementById("p-h").value=pf.h;document.getElementById("p-t").value=pf.t;
+ubmi();updD();
+document.getElementById("i-rhr").oninput=e=>{S.rhr=e.target.value!==""?parseInt(e.target.value):null;updD();vld()};
+document.getElementById("i-slp").oninput=e=>{S.slp=e.target.value!==""?parseFloat(e.target.value):null;updD();vld()};
+document.getElementById("btn-calc").onclick=showResult;
+document.getElementById("btn-save").onclick=saveSession;
+document.getElementById("btn-clr").onclick=()=>{if(confirm("Clear all data?")){ss=[];localStorage.setItem("ss5_s","[]");renderHist()}};
+document.querySelectorAll(".nv button").forEach(b=>b.onclick=()=>sw(b.dataset.v));
+["p-w","p-h","p-t"].forEach(id=>{document.getElementById(id).oninput=e=>{const k=id==="p-w"?"w":id==="p-h"?"h":"t";pf[k]=e.target.value;localStorage.setItem("ss5_p",JSON.stringify(pf));ubmi();updD()}});
+
+// ═══ GOOGLE CALENDAR ═══
+function addToGCal(){
+  var s=window._lastSaved;
+  if(!s&&ST&&ST.res){s={tier:ST.res.t.label,sw:ST.res.t.sw,tg:ST.res.t.tg,day:ST.day,rhr:ST.rhr,slp:ST.slp,grip:ST.grip,sc:null,tc:null,notes:""};}
+  if(!s)return;
+  var d=DAYS.find(function(x){return x.id===s.day});
+  var title=encodeURIComponent("S&S "+s.tier+" — "+s.sw+(s.tg&&s.tg!=="—"?" / "+s.tg+" TGU":""));
+  var now=new Date();
+  var pad=function(n){return(n<10?"0":"")+n};
+  var ds=""+now.getFullYear()+pad(now.getMonth()+1)+pad(now.getDate());
+  var det="Shift: "+(d?d.icon+" "+d.code:s.day)+"\n"+
+    "RHR: "+(s.rhr||"—")+"bpm | Sleep: "+(s.slp||"—")+"h | Grip: "+(s.grip||"—")+"\n"+
+    (s.sc?"Done: "+s.sc+" swings"+(s.tc?", "+s.tc+" TGU":"")+"\n":"")+
+    (s.notes?"Notes: "+s.notes+"\n":"")+
+    "\nS&S Adaptive Load Tracker";
+  var url="https://calendar.google.com/calendar/render?action=TEMPLATE&text="+title+"&dates="+ds+"/"+ds+"&details="+encodeURIComponent(det);
+  window.open(url,"_blank");
+  var m1=document.getElementById("gcal-msg");
+  var m2=document.getElementById("gcal-msg2");
+  if(m1)m1.innerHTML='<span style="color:#22c55e">✓ Opening Google Calendar</span>';
+  if(m2)m2.innerHTML='<span style="color:#22c55e">✓ Opening Google Calendar</span>';
+}
+
+// Show gcal button after save
+var origSave=saveSession;
+saveSession=function(){
+  origSave();
+  var gb=document.getElementById("btn-gcal");
+  if(gb)gb.style.display="block";
+  window._lastSaved=ss[0];
+};
+document.getElementById("btn-save").onclick=saveSession;
+
+// ═══ PWA SERVICE WORKER ═══
+if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(function(){});}
+
+</script>
+</body>
+</html>
